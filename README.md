@@ -3,9 +3,10 @@
 ## Local Setup Notes
 
 1. Golang setup: https://go.dev/doc/install
-3. Install [air](https://github.com/cosmtrek/air).
-3. Start development server
+2. Start development server, 
 ```
+git clone git@github.com:SimplQ/simplQ-golang.git
+cd simplQ-golang/
 air
 ```
 
