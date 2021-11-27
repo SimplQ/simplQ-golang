@@ -1,9 +1,9 @@
-azure: AzureFunctions/handler
+all: AzureFunctions/handler
 	mkdir -p build
 	cd AzureFunctions && zip -r ../build/azure_functions.zip *
 	ls -lh build/azure_functions.zip
 
-azure/handler: cmd/handler/main.go
+AzureFunctions/handler: cmd/handler/main.go
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-extldflags "-static"' -o $@ $<
 
 clean:
