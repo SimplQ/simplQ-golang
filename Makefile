@@ -15,10 +15,7 @@ build/azure_functions.zip: AzureFunctions/handler
 	@ls -lh build/azure_functions.zip | awk '{print $$5 " " $$9}'
 
 AzureFunctions/handler: cmd/api/main.go
-	export CGO_ENABLED=$(CGO_ENABLED) 
-	export GOOS=$(GOOS)
-	export GOARCH=$(GOARCH)
-	go build -ldflags $(LD_FLAGS) -o $@ $<
+	CGO_ENABLED=$(CGO_ENABLED) GOOS=$(GOOS) GOARCH=$(GOARCH) go build -ldflags $(LD_FLAGS) -o $@ $<
 
 clean:
 	rm AzureFunctions/handler
