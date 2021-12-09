@@ -30,8 +30,8 @@ type Queue struct {
 	Tokens []Token
 
 	// Creation time.
-	creationTime time.Time
+	CreationTime time.Time
 
 	// Deletion time.
-	deletionTime time.Time
+	DeletionTime time.Time
 }

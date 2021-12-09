@@ -35,11 +35,11 @@ type Token struct {
 	NotifiedCount uint32
 
 	// Timestamp when the token was last notified.
-	lastNotifiedTime time.Time
+	LastNotifiedTime time.Time
 
 	// Creation time.
-	creationTime time.Time
+	CreationTime time.Time
 
 	// Deletion time.
-	deletionTime time.Time
+	DeletionTime time.Time
 }
