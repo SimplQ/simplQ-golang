@@ -6,5 +6,5 @@ import (
 )
 
 func InitalizeRoutes() {
-	http.HandleFunc("/api/HttpExample", handler.HelloHandler);
+	http.HandleFunc("/api/HttpExample", handler.Hello);
 }

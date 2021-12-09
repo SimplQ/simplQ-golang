@@ -5,7 +5,7 @@ import (
     "net/http"
 )
 
-func HelloHandler(w http.ResponseWriter, r *http.Request) {
+func Hello(w http.ResponseWriter, r *http.Request) {
 	message := "This HTTP triggered function executed successfully. Pass a name in the query string for a personalized response.\n"
 	name := r.URL.Query().Get("name")
 	if name != "" {
