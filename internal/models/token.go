@@ -7,13 +7,6 @@ import (
 // This ID will be exposed to clients, and hence have to be properly random and unguessable.
 type TokenId Id
 
-// Current state of the token. 
-type TokenStatus string
-const (
-        TOKEN_ACTIVE TokenStatus = "TOKEN_ACTIVE"
-        TOKEN_DELETED TokenStatus = "TOKEN_DELETED"
-)
-
 type Token struct {
 	// Unique ID for the token. 
 	Id TokenId
@@ -28,8 +21,8 @@ type Token struct {
 	// Optional. Email ID if the queue collects email ID of users. 
 	EmailId string
 
-	// Current status of token.
-	Status TokenStatus
+	// Set to true if the token has been deleted
+	bool IsDeleted
 
 	// Number of times the token was notified.
 	NotifiedCount uint32

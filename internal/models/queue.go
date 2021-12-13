@@ -4,13 +4,6 @@ import (
 	"time"
 )
 
-type QueueStatus string
-const (
-        QUEUE_ACTIVE QueueStatus = "QUEUE_ACTIVE"
-        QUEUE_PAUSED QueueStatus = "QUEUE_PAUSED"
-        QUEUE_DELETED QueueStatus = "QUEUE_DELETED"
-)
-
 // This ID will be exposed to clients, and hence have to be properly random and unguessable.
 type QueueId Id
 
@@ -23,8 +16,11 @@ type Queue struct {
 	// there is only one queue by a given name.
 	QueueName string
 
-	// Current status of the queue.
-	Status QueueStatus
+	// Set to true if the queue is temporarily not issuing tokens
+	bool IsPaused
+
+	// Set to true if the queue has been deleted
+	bool IsDeleted
 
 	// Tokens present in the queue.
 	Tokens []Token
