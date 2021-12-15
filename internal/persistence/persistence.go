@@ -26,6 +26,6 @@ type QueueStore interface {
 	// Read token by id.
 	ReadToken(models.TokenId)
 
-	// Set token status to new value.
-	UpdateTokenDeleteStatus(models.TokenId, bool)
+	// Delete token
+	RemoveToken(models.TokenId)
 }
