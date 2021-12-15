@@ -17,10 +17,10 @@ type Queue struct {
 	QueueName string
 
 	// Set to true if the queue is temporarily not issuing tokens
-	bool IsPaused
+	IsPaused bool 
 
 	// Set to true if the queue has been deleted
-	bool IsDeleted
+	IsDeleted bool 
 
 	// Tokens present in the queue.
 	Tokens []Token

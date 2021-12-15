@@ -22,7 +22,7 @@ type Token struct {
 	EmailId string
 
 	// Set to true if the token has been deleted
-	bool IsDeleted
+	IsDeleted bool 
 
 	// Number of times the token was notified.
 	NotifiedCount uint32
