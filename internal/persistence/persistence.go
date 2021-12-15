@@ -11,11 +11,14 @@ type QueueStore interface {
 	// Read a queue by id.
 	ReadQueue(models.QueueId) models.Queue
 
-	// Set the queue pause status to new value.
-	UpdateQueuePauseStatus(models.QueueId, bool)
+	// Set the queue pause status to true
+	PauseQueue(models.QueueId)
 
-	// Set the queue delete status to new value.
-	UpdateQueueDeleteStatus(models.QueueId, bool)
+    // Set the queue pause status to false
+	ResumeQueue(models.QueueId)
+	
+    // Set the queue delete status to new value.
+	DeleteQueue(models.QueueId)
 
 	// Add a new token to the queue.
 	AddTokenToQueue(models.QueueId, models.Token)
