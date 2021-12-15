@@ -8,8 +8,8 @@ import (
 type QueueId Id
 
 type Queue struct {
-	// Unique ID for the queue.
-	Id QueueId
+	// Unique ID for the queue. 
+    Id QueueId          `bson:"_id,omitempty"`
 
 	// Name of the queue. The name is used in generating queue urls, for ex
 	// https://simplq.me/j/<QueueName>. The storage layer guarantees sure that
