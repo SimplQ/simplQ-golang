@@ -8,7 +8,7 @@ import (
 type TokenId Id
 
 type Token struct {
-	// Unique ID for the token. 
+	// Unique ID for the token.
 	Id TokenId
 
 	// Name of the token, typically name of the person to whom the token was
@@ -18,11 +18,11 @@ type Token struct {
 	// Contact Number
 	ContactNumber string
 
-	// Optional. Email ID if the queue collects email ID of users. 
+	// Optional. Email ID if the queue collects email ID of users.
 	EmailId string
 
 	// Set to true if the token has been deleted
-	bool IsDeleted
+	IsDeleted bool
 
 	// Number of times the token was notified.
 	NotifiedCount uint32
