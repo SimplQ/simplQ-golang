@@ -1,11 +1,16 @@
 package handler
 
 import (
+	"encoding/json"
+	"log"
     "fmt"
-    "net/http"
-    "encoding/json"
-    "github.com/SimplQ/simplQ-golang/internal/models"
+	"net/http"
+
+	"github.com/SimplQ/simplQ-golang/internal/models"
+	"github.com/SimplQ/simplQ-golang/internal/persistence"
 )
+
+var Store persistence.QueueStore
 
 func Queue(w http.ResponseWriter, r *http.Request) {
     switch r.Method {
@@ -19,12 +24,7 @@ func Queue(w http.ResponseWriter, r *http.Request) {
 }
 
 func getQueue(w http.ResponseWriter, r *http.Request) {
-    w.Header().Add("Content-Type", "application/json")
-    encoder := json.NewEncoder(w)
-    q := models.Queue{
-        QueueName: "alice",
-    }
-    encoder.Encode(q)
+    fmt.Fprintf(w, "GET Queue not implemented")
 }
 
 func createQueue(w http.ResponseWriter, r *http.Request) {
@@ -37,8 +37,12 @@ func createQueue(w http.ResponseWriter, r *http.Request) {
         panic(err)
     }
 
-    fmt.Print("Create Queue: ")
-    fmt.Println(q)
+    log.Print("Create Queue: ")
+    log.Println(q)
+
+    insertedId := Store.CreateQueue(q)
+
+    log.Printf("Inserted %s", insertedId)
 
     fmt.Fprintf(w, "Post queue")
 }

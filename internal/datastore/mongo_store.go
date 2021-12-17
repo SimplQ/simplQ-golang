@@ -43,12 +43,18 @@ func ConnectMongoDB(uri string) *MongoDB {
 }
 
 func (mongodb MongoDB) CreateQueue(queue models.Queue) models.QueueId {
+    // Only take required data from argument
+    // Ignore other values of the argument queue
     queue_insert := bson.D{
+        // Get queue name from argument
         {"queueName", queue.QueueName},
+        // not paused and not deleted initially
         {"isPaused", false},
         {"isDeleted", false},
+        // Current time is creation time
         {"creationTime", time.Now()},
-        {"deletionTime", time.Now()},
+        // Empty array of tokens
+        {"tokens", primitive.A{}},
     }
 
     result, err := mongodb.Queue.InsertOne(context.TODO(), queue_insert)
@@ -60,4 +66,32 @@ func (mongodb MongoDB) CreateQueue(queue models.Queue) models.QueueId {
     stringId := result.InsertedID.(primitive.ObjectID).Hex()
 
     return models.QueueId(stringId)
+}
+
+func (mongodb MongoDB) ReadQueue(models.QueueId) models.Queue {
+    panic("Not implemented")
+}
+
+func (mongodb MongoDB) PauseQueue(models.QueueId) {
+    panic("Not implemented")
+}
+
+func (mongodb MongoDB) ResumeQueue(models.QueueId) {
+    panic("Not implemented")
+}
+
+func (mongodb MongoDB) DeleteQueue(models.QueueId) {
+    panic("Not implemented")
+}
+
+func (mongodb MongoDB) AddTokenToQueue(models.QueueId, models.Token) {
+    panic("Not implemented")
+}
+
+func (mongodb MongoDB) ReadToken(models.TokenId) {
+    panic("Not implemented")
+}
+
+func (mongodb MongoDB) RemoveToken(models.TokenId) {
+    panic("Not implemented")
 }

@@ -11,6 +11,8 @@ import (
 
 func main() {
 	listenAddr := ":8080"
+
+    // Use local mongodb instance if env variable not set
     mongoUri := "mongodb://localhost:27017/?maxPoolSize=20&w=majority"
 
 	if val, ok := os.LookupEnv("FUNCTIONS_CUSTOMHANDLER_PORT"); ok {
@@ -21,9 +23,9 @@ func main() {
         mongoUri = val
 	}
 
-    datastore.ConnectMongoDB(mongoUri)
+    mongodb := datastore.ConnectMongoDB(mongoUri)
 
-    mux.InitalizeRoutes()
+    mux.InitalizeRoutes(mongodb)
 
 	log.Printf("About to listen on %s. Go to https://127.0.0.1%s/", listenAddr, listenAddr)
 	log.Fatal(http.ListenAndServe(listenAddr, nil))
