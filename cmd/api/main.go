@@ -23,7 +23,7 @@ func main() {
         mongoUri = val
 	}
 
-    mongodb := datastore.ConnectMongoDB(mongoUri)
+    mongodb := datastore.NewMongoDB(mongoUri)
 
     mux.InitalizeRoutes(mongodb)
 

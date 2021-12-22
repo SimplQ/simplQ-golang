@@ -20,7 +20,7 @@ type MongoDB struct {
 
 var mongodb MongoDB
 
-func ConnectMongoDB(uri string) *MongoDB {
+func NewMongoDB(uri string) *MongoDB {
     log.Println("Connection to MongoDB...")
 
     client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
