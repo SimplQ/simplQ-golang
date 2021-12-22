@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/SimplQ/simplQ-golang/internal/datastore"
 	"github.com/SimplQ/simplQ-golang/internal/models"
 )
 
@@ -45,7 +46,7 @@ func createQueue(w http.ResponseWriter, r *http.Request) {
     log.Print("Create Queue: ")
     log.Println(q)
 
-    insertedId := Store.CreateQueue(q)
+    insertedId := datastore.Store.CreateQueue(q)
 
     log.Printf("Inserted %s", insertedId)
 
