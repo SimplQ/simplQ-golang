@@ -12,18 +12,11 @@ import (
 func main() {
 	listenAddr := ":8080"
 
-    // Use local mongodb instance if env variable not set
-    mongoUri := "mongodb://localhost:27017/?maxPoolSize=20&w=majority"
-
 	if val, ok := os.LookupEnv("FUNCTIONS_CUSTOMHANDLER_PORT"); ok {
 		listenAddr = ":" + val
 	}
     
-    if val, ok := os.LookupEnv("MONGO_URI"); ok {
-        mongoUri = val
-	}
-
-    mongodb := datastore.NewMongoDB(mongoUri)
+    mongodb := datastore.NewMongoDB()
 
     mux.InitalizeRoutes(mongodb)
 

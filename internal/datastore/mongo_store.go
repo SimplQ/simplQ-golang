@@ -3,6 +3,7 @@ package datastore
 import (
 	"context"
 	"log"
+    "os"
 
 	"github.com/SimplQ/simplQ-golang/internal/models"
 
@@ -20,7 +21,14 @@ type MongoDB struct {
 
 var mongodb MongoDB
 
-func NewMongoDB(uri string) *MongoDB {
+func NewMongoDB() *MongoDB {
+    // Use local mongodb instance if env variable not set
+    uri := "mongodb://localhost:27017/?maxPoolSize=20&w=majority"
+    
+    if val, ok := os.LookupEnv("MONGO_URI"); ok {
+        uri = val
+	}
+
     log.Println("Connection to MongoDB...")
 
     client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
