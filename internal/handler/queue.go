@@ -2,9 +2,10 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
-    "fmt"
 	"net/http"
+	"time"
 
 	"github.com/SimplQ/simplQ-golang/internal/models"
 	"github.com/SimplQ/simplQ-golang/internal/persistence"
@@ -36,6 +37,13 @@ func createQueue(w http.ResponseWriter, r *http.Request) {
     if err != nil {
         panic(err)
     }
+
+    // Initialize values
+    // Only consider queue name from the body of the request
+    q.CreationTime = time.Now()
+    q.IsDeleted = false
+    q.IsPaused = false
+    q.Tokens = make([]models.Token, 0)
 
     log.Print("Create Queue: ")
     log.Println(q)
