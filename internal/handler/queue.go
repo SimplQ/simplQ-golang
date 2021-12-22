@@ -8,10 +8,7 @@ import (
 	"time"
 
 	"github.com/SimplQ/simplQ-golang/internal/models"
-	"github.com/SimplQ/simplQ-golang/internal/persistence"
 )
-
-var Store persistence.QueueStore
 
 func Queue(w http.ResponseWriter, r *http.Request) {
     switch r.Method {
