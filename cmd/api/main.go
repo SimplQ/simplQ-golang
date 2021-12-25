@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/SimplQ/simplQ-golang/internal/datastore"
 	"github.com/SimplQ/simplQ-golang/internal/mux"
 )
 

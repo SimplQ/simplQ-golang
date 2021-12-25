@@ -29,7 +29,7 @@ func NewMongoDB() *MongoDB {
         uri = val
 	}
 
-    log.Println("Connection to MongoDB...")
+    log.Println("Connecting to MongoDB...")
 
     client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
     

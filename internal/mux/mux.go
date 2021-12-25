@@ -7,10 +7,9 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 
 	"github.com/SimplQ/simplQ-golang/internal/handler"
-	"github.com/SimplQ/simplQ-golang/internal/persistence"
 )
 
-func InitalizeRoutes(store persistence.QueueStore) chi.Router {
+func InitalizeRoutes() chi.Router {
 	r := chi.NewRouter()
 
 	r.Use(middleware.RequestID)
