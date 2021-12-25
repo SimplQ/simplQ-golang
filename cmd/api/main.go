@@ -10,16 +10,13 @@ import (
 )
 
 func main() {
-	listenAddr := ":8080"
+    mongodb := datastore.NewMongoDB()
+    routes := mux.InitalizeRoutes(mongodb)
 
+	listenAddr := ":8080"
 	if val, ok := os.LookupEnv("FUNCTIONS_CUSTOMHANDLER_PORT"); ok {
 		listenAddr = ":" + val
 	}
-    
-    mongodb := datastore.NewMongoDB()
-
-    mux.InitalizeRoutes(mongodb)
-
 	log.Printf("About to listen on %s. Go to https://127.0.0.1%s/", listenAddr, listenAddr)
-	log.Fatal(http.ListenAndServe(listenAddr, nil))
+	log.Fatal(http.ListenAndServe(listenAddr, routes))
 }

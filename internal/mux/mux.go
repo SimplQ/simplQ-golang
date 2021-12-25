@@ -1,14 +1,30 @@
 package mux
 
 import (
-	"net/http"
+	"time"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 
 	"github.com/SimplQ/simplQ-golang/internal/handler"
 	"github.com/SimplQ/simplQ-golang/internal/persistence"
 )
 
-func InitalizeRoutes(store persistence.QueueStore) {
-    // Both paths are needed since /api/queue/ doesn't cover /api/queue
-    http.HandleFunc("/api/queue/", handler.Queue)
-    http.HandleFunc("/api/queue", handler.Queue)
+func InitalizeRoutes(store persistence.QueueStore) chi.Router {
+	r := chi.NewRouter()
+
+	r.Use(middleware.RequestID)
+	r.Use(middleware.RealIP)
+	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
+
+	r.Use(middleware.Timeout(10 * time.Second))
+
+	// Routes for "queue" resource
+	r.Route("/queue", func(r chi.Router) {
+		// POST /articles
+		r.Post("/", handler.CreateQueue)                                        
+	})
+
+	return r;
 }
