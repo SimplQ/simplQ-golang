@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/SimplQ/simplQ-golang/internal/datastore"
 	"github.com/SimplQ/simplQ-golang/internal/mux"
 )
 
@@ -16,9 +15,7 @@ func main() {
 		listenAddr = ":" + val
 	}
     
-    mongodb := datastore.NewMongoDB()
-
-    mux.InitalizeRoutes(mongodb)
+    mux.InitalizeRoutes()
 
 	log.Printf("About to listen on %s. Go to https://127.0.0.1%s/", listenAddr, listenAddr)
 	log.Fatal(http.ListenAndServe(listenAddr, nil))
