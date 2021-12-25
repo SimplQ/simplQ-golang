@@ -4,7 +4,7 @@
 
 1. Golang setup: https://go.dev/doc/install
 2. Install docker and docker-compose: https://docs.docker.com/compose/install/
-2. Start development server:
+3. Start development server:
 ```
 git clone git@github.com:SimplQ/simplQ-golang.git
 cd simplQ-golang/
