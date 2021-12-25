@@ -10,8 +10,8 @@ import (
 )
 
 func main() {
-    mongodb := datastore.NewMongoDB()
-    routes := mux.InitalizeRoutes(mongodb)
+	mongodb := datastore.NewMongoDB()
+	routes := mux.InitalizeRoutes(mongodb)
 
 	listenAddr := ":8080"
 	if val, ok := os.LookupEnv("FUNCTIONS_CUSTOMHANDLER_PORT"); ok {
