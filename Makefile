@@ -24,5 +24,10 @@ clean:
 dev:
 	# Install air if not already present 
 	# https://github.com/cosmtrek/air
-	command -v air > /dev/null || curl -sSfL https://raw.githubusercontent.com/cosmtrek/air/master/install.sh | sh -s -- -b $(GOPATH)/bin 
+	command -v air > /dev/null || curl -sSfL https://raw.githubusercontent.com/cosmtrek/air/master/install.sh | sh -s -- -b $(GOPATH)/bin
+
+	# Start local docker containers for development
+	docker-compose up -d
+
+	# Start development server
 	air

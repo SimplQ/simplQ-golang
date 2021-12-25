@@ -22,8 +22,8 @@ type MongoDB struct {
 var mongodb MongoDB
 
 func NewMongoDB() *MongoDB {
-    // Use local mongodb instance if env variable not set
-    uri := "mongodb://localhost:27017/?maxPoolSize=20&w=majority"
+    // Use local development mongodb instance if env variable not set
+    uri := "mongodb://root:example@localhost:27017/?maxPoolSize=20&w=majority"
     
     if val, ok := os.LookupEnv("MONGO_URI"); ok {
         uri = val
