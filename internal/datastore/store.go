@@ -1,8 +1,6 @@
-package persistence
+package datastore
 
-import (
-	"github.com/SimplQ/simplQ-golang/internal/models"
-)
+import "github.com/SimplQ/simplQ-golang/internal/models"
 
 type QueueStore interface {
 	// Create a new queue and return the queue ID.
@@ -29,3 +27,5 @@ type QueueStore interface {
 	// Delete token
 	RemoveToken(models.TokenId)
 }
+
+var Store QueueStore = NewMongoDB()

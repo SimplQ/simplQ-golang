@@ -1,10 +1,13 @@
 package mux
 
 import (
-    "net/http"
-    "github.com/SimplQ/simplQ-golang/internal/handler"
+	"net/http"
+
+	"github.com/SimplQ/simplQ-golang/internal/handler"
 )
 
 func InitalizeRoutes() {
-	http.HandleFunc("/api/HttpExample", handler.Hello);
+    // Both paths are needed since /api/queue/ doesn't cover /api/queue
+    http.HandleFunc("/api/queue/", handler.Queue)
+    http.HandleFunc("/api/queue", handler.Queue)
 }
