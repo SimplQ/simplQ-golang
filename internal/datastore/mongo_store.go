@@ -19,8 +19,6 @@ type MongoDB struct {
     Token *mongo.Collection
 }
 
-var mongodb MongoDB
-
 func NewMongoDB() *MongoDB {
     // Use local development mongodb instance if env variable not set
     uri := "mongodb://root:example@localhost:27017/?maxPoolSize=20&w=majority"
@@ -29,7 +27,7 @@ func NewMongoDB() *MongoDB {
         uri = val
 	}
 
-    log.Println("Connection to MongoDB...")
+    log.Println("Connecting to MongoDB...")
 
     client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
     
