@@ -9,14 +9,12 @@ import (
 )
 
 func main() {
-	listenAddr := ":8080"
+	routes := mux.InitalizeRoutes()
 
+	listenAddr := ":8080"
 	if val, ok := os.LookupEnv("FUNCTIONS_CUSTOMHANDLER_PORT"); ok {
 		listenAddr = ":" + val
 	}
-    
-    mux.InitalizeRoutes()
-
-	log.Printf("About to listen on %s. Go to https://127.0.0.1%s/", listenAddr, listenAddr)
-	log.Fatal(http.ListenAndServe(listenAddr, nil))
+	log.Printf("About to listen on %s. Go to http://127.0.0.1%s/", listenAddr, listenAddr)
+	log.Fatal(http.ListenAndServe(listenAddr, routes))
 }
