@@ -8,7 +8,11 @@ import (
 )
 
 func InitalizeRoutes(store persistence.QueueStore) {
-    // Both paths are needed since /api/queue/ doesn't cover /api/queue
-    http.HandleFunc("/api/queue/", handler.Queue)
-    http.HandleFunc("/api/queue", handler.Queue)
+	// Both paths are needed since /api/queue/ doesn't cover /api/queue
+
+	http.HandleFunc("/api/queue/", handler.Queue)
+	http.HandleFunc("/api/queue", handler.Queue)
+	http.HandleFunc("/api/queue/pause/", handler.QueuePause)
+	http.HandleFunc("/api/queue/resume/", handler.QueueResume)
+
 }
