@@ -9,6 +9,7 @@ import (
 
 	"github.com/SimplQ/simplQ-golang/internal/datastore"
 	"github.com/SimplQ/simplQ-golang/internal/models/db"
+	"github.com/SimplQ/simplQ-golang/internal/models/api"
 )
 
 func GetQueue(w http.ResponseWriter, r *http.Request) {
@@ -18,24 +19,34 @@ func GetQueue(w http.ResponseWriter, r *http.Request) {
 func CreateQueue(w http.ResponseWriter, r *http.Request) {
     decoder := json.NewDecoder(r.Body)
 
-    var q db.Queue
+    var q api.CreateQueueRequest
     err := decoder.Decode(&q)
 
     if err != nil {
-        panic(err)
+        http.Error(w, fmt.Sprint(err), http.StatusBadRequest)
+    }
+
+    // Validation
+    validation_err, ok := q.Validate() 
+
+    if !ok {
+        http.Error(w, validation_err.Message, http.StatusBadRequest)
     }
 
     // Initialize values
     // Only consider queue name from the body of the request
-    q.CreationTime = time.Now()
-    q.IsDeleted = false
-    q.IsPaused = false
-    q.Tokens = make([]db.Token, 0)
+    queue := db.Queue {
+        QueueName: q.QueueName,
+        CreationTime: time.Now(),
+        IsDeleted: false,
+        IsPaused: false,
+        Tokens: make([]db.Token, 0),
+    }
 
     log.Print("Create Queue: ")
     log.Println(q)
 
-    insertedId := datastore.Store.CreateQueue(q)
+    insertedId := datastore.Store.CreateQueue(queue)
 
     log.Printf("Inserted %s", insertedId)
 
