@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/SimplQ/simplQ-golang/internal/datastore"
-	"github.com/SimplQ/simplQ-golang/internal/models"
+	"github.com/SimplQ/simplQ-golang/internal/models/db"
 )
 
 func GetQueue(w http.ResponseWriter, r *http.Request) {
@@ -18,7 +18,7 @@ func GetQueue(w http.ResponseWriter, r *http.Request) {
 func CreateQueue(w http.ResponseWriter, r *http.Request) {
     decoder := json.NewDecoder(r.Body)
 
-    var q models.Queue
+    var q db.Queue
     err := decoder.Decode(&q)
 
     if err != nil {
@@ -30,7 +30,7 @@ func CreateQueue(w http.ResponseWriter, r *http.Request) {
     q.CreationTime = time.Now()
     q.IsDeleted = false
     q.IsPaused = false
-    q.Tokens = make([]models.Token, 0)
+    q.Tokens = make([]db.Token, 0)
 
     log.Print("Create Queue: ")
     log.Println(q)

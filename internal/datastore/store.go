@@ -1,31 +1,31 @@
 package datastore
 
-import "github.com/SimplQ/simplQ-golang/internal/models"
+import "github.com/SimplQ/simplQ-golang/internal/models/db"
 
 type QueueStore interface {
 	// Create a new queue and return the queue ID.
-	CreateQueue(models.Queue) models.QueueId
+	CreateQueue(db.Queue) db.QueueId
 
 	// Read a queue by id.
-	ReadQueue(models.QueueId) models.Queue
+	ReadQueue(db.QueueId) db.Queue
 
 	// Set the queue pause status to true
-	PauseQueue(models.QueueId)
+	PauseQueue(db.QueueId)
 
     // Set the queue pause status to false
-	ResumeQueue(models.QueueId)
+	ResumeQueue(db.QueueId)
 	
     // Set the queue delete status to new value.
-	DeleteQueue(models.QueueId)
+	DeleteQueue(db.QueueId)
 
 	// Add a new token to the queue.
-	AddTokenToQueue(models.QueueId, models.Token)
+	AddTokenToQueue(db.QueueId, db.Token)
 
 	// Read token by id.
-	ReadToken(models.TokenId)
+	ReadToken(db.TokenId)
 
 	// Delete token
-	RemoveToken(models.TokenId)
+	RemoveToken(db.TokenId)
 }
 
 var Store QueueStore = NewMongoDB()
