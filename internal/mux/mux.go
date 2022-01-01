@@ -22,8 +22,23 @@ func InitalizeRoutes() chi.Router {
 	// Routes for "queue" resource
 	r.Route("/queue", func(r chi.Router) {
 		// POST /articles
-		r.Post("/", handler.CreateQueue)                                        
-	})
+		r.Post("/", handler.CreateQueue)
 
-	return r;
+		// Subrouters
+		r.Route("/{id}", func(r chi.Router) {
+			r.Use(handler.QueueCtx)
+			r.Get("/", handler.GetQueue)       // GET /queue/123
+			r.Delete("/", handler.DeleteQueue) // DELETE /queue/123
+		})
+		r.Route("/pause/{id}", func(r chi.Router) {
+			r.Use(handler.QueueCtx)
+			r.Put("/", handler.PauseQueue) // PUT /queue/pause/123
+
+		})
+		r.Route("/resume/{id}", func(r chi.Router) {
+			r.Use(handler.QueueCtx)
+			r.Put("/", handler.ResumeQueue) // PUT /queue/resume/123
+		})
+	})
+	return r
 }
