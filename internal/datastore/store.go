@@ -12,10 +12,10 @@ type QueueStore interface {
 	// Set the queue pause status to true
 	PauseQueue(models.QueueId)
 
-    // Set the queue pause status to false
+	// Set the queue pause status to false
 	ResumeQueue(models.QueueId)
-	
-    // Set the queue delete status to new value.
+
+	// Set the queue delete status to new value.
 	DeleteQueue(models.QueueId)
 
 	// Add a new token to the queue.

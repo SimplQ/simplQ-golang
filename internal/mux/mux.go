@@ -22,8 +22,8 @@ func InitalizeRoutes() chi.Router {
 	// Routes for "queue" resource
 	r.Route("/queue", func(r chi.Router) {
 		// POST /articles
-		r.Post("/", handler.CreateQueue)                                        
+		r.Post("/", handler.CreateQueue)
 	})
 
-	return r;
+	return r
 }
