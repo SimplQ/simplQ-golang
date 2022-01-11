@@ -78,34 +78,21 @@ func (mongodb MongoDB) ReadQueue(id models.QueueId) (models.Queue, error) {
 	return result, nil
 }
 
-func (mongodb MongoDB) PauseQueue(id models.QueueId) {
+func (mongodb MongoDB) SetIsPaused(id models.QueueId, isPaused bool) (*mongo.UpdateResult, error) {
 	queueId, _ := primitive.ObjectIDFromHex(string(id))
 	result, err := mongodb.Queue.UpdateOne(
 		context.TODO(),
 		bson.M{"_id": queueId},
 		bson.D{
-			{"$set", bson.D{{"isPaused", true}}},
+			{"$set", bson.D{{"isPaused", isPaused}}},
 		},
 	)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("Paused  %v Documents!\n", result.ModifiedCount)
-}
 
-func (mongodb MongoDB) ResumeQueue(id models.QueueId) {
-	queueId, _ := primitive.ObjectIDFromHex(string(id))
-	result, err := mongodb.Queue.UpdateOne(
-		context.TODO(),
-		bson.M{"_id": queueId},
-		bson.D{
-			{"$set", bson.D{{"isPaused", false}}},
-		},
-	)
 	if err != nil {
-		log.Fatal(err)
+		return result, err
 	}
-	fmt.Printf("Resumed %v Documents!\n", result.ModifiedCount)
+
+	return result, nil
 }
 
 func (mongodb MongoDB) DeleteQueue(id models.QueueId) {

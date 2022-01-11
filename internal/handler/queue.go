@@ -57,23 +57,39 @@ func CreateQueue(w http.ResponseWriter, r *http.Request) {
 func PauseQueue(w http.ResponseWriter, r *http.Request) {
 	id := r.Context().Value("id").(string)
 	if id == "" {
-		w.WriteHeader(http.StatusNotFound)
+		http.Error(w, fmt.Sprintf("Invalid Id: %s", id), 404)
 		return
 	}
-	log.Println("URL path param 'id' is: " + string(id))
-	datastore.Store.PauseQueue(models.QueueId(id))
-	fmt.Fprintf(w, "Queue paused")
+	result, err := datastore.Store.SetIsPaused(models.QueueId(id), true) // Set IsPaused = true
+	if err != nil {
+		http.Error(w, fmt.Sprint(err), 400)
+		return
+	}
+	if result.ModifiedCount == 0 {
+		http.Error(w, fmt.Sprintf("No record found for Queue Id: %s", id), 404)
+		return
+	}
+	fmt.Fprintf(w, "Paused Queue Id: %s", id)
+	w.WriteHeader(200)
 }
 
 func ResumeQueue(w http.ResponseWriter, r *http.Request) {
 	id := r.Context().Value("id").(string)
 	if id == "" {
-		w.WriteHeader(http.StatusNotFound)
+		http.Error(w, fmt.Sprintf("Invalid Id: %s", id), 404)
 		return
 	}
-	log.Println("URL path param 'id' is: " + string(id))
-	datastore.Store.ResumeQueue(models.QueueId(id))
-	fmt.Fprintf(w, "Queue resumed")
+	result, err := datastore.Store.SetIsPaused(models.QueueId(id), false) // Set IsPaused = false
+	if err != nil {
+		http.Error(w, fmt.Sprint(err), 400)
+		return
+	}
+	if result.ModifiedCount == 0 {
+		http.Error(w, fmt.Sprintf("No record found for Queue Id: %s", id), 404)
+		return
+	}
+	fmt.Fprintf(w, "Resumed Queue Id: %s", id)
+	w.WriteHeader(200)
 }
 
 func DeleteQueue(w http.ResponseWriter, r *http.Request) {
