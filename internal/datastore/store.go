@@ -7,7 +7,7 @@ type QueueStore interface {
 	CreateQueue(models.Queue) models.QueueId
 
 	// Read a queue by id.
-	ReadQueue(models.QueueId) models.Queue
+	ReadQueue(models.QueueId) (models.Queue, error)
 
 	// Set the queue pause status to true
 	PauseQueue(models.QueueId)

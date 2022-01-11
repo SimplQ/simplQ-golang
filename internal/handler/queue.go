@@ -16,11 +16,15 @@ import (
 func GetQueue(w http.ResponseWriter, r *http.Request) {
 	id := r.Context().Value("id").(string)
 	if id == "" {
-		w.WriteHeader(http.StatusNotFound)
+		http.Error(w, fmt.Sprintf("Invalid Id: %s", id), 404)
 		return
 	}
-	q := datastore.Store.ReadQueue(models.QueueId(id))
-	json.NewEncoder(w).Encode(q)
+	queue, err := datastore.Store.ReadQueue(models.QueueId(id))
+	if err != nil {
+		http.Error(w, fmt.Sprintf("No record found for Queue Id: %s", id), 404)
+		return
+	}
+	json.NewEncoder(w).Encode(queue)
 }
 
 func CreateQueue(w http.ResponseWriter, r *http.Request) {

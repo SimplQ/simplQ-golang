@@ -63,7 +63,7 @@ func (mongodb MongoDB) CreateQueue(queue models.Queue) models.QueueId {
 	return models.QueueId(stringId)
 }
 
-func (mongodb MongoDB) ReadQueue(id models.QueueId) models.Queue {
+func (mongodb MongoDB) ReadQueue(id models.QueueId) (models.Queue, error) {
 	result := models.Queue{}
 
 	// convert id string to ObjectId
@@ -72,10 +72,10 @@ func (mongodb MongoDB) ReadQueue(id models.QueueId) models.Queue {
 	err := mongodb.Queue.FindOne(context.TODO(), bson.M{"_id": queueId}).Decode(&result)
 
 	if err != nil {
-		log.Fatal(err)
+		return result, err
 	}
 
-	return result
+	return result, nil
 }
 
 func (mongodb MongoDB) PauseQueue(id models.QueueId) {
