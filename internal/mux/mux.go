@@ -27,17 +27,10 @@ func InitalizeRoutes() chi.Router {
 		// Subrouters
 		r.Route("/{id}", func(r chi.Router) {
 			r.Use(handler.QueueCtx)
-			r.Get("/", handler.GetQueue)       // GET /queue/123
-			r.Delete("/", handler.DeleteQueue) // DELETE /queue/123
-		})
-		r.Route("/pause/{id}", func(r chi.Router) {
-			r.Use(handler.QueueCtx)
-			r.Put("/", handler.PauseQueue) // PUT /queue/pause/123
-
-		})
-		r.Route("/resume/{id}", func(r chi.Router) {
-			r.Use(handler.QueueCtx)
-			r.Put("/", handler.ResumeQueue) // PUT /queue/resume/123
+			r.Get("/", handler.GetQueue)          // GET /queue/123
+			r.Put("/pause", handler.PauseQueue)   // PUT /queue/123/pause
+			r.Put("/resume", handler.ResumeQueue) // PUT /queue/123/resume
+			r.Delete("/", handler.DeleteQueue)    // DELETE /queue/123
 		})
 	})
 	return r
