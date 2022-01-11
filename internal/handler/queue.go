@@ -95,12 +95,20 @@ func ResumeQueue(w http.ResponseWriter, r *http.Request) {
 func DeleteQueue(w http.ResponseWriter, r *http.Request) {
 	id := r.Context().Value("id").(string)
 	if id == "" {
-		w.WriteHeader(http.StatusNotFound)
+		http.Error(w, fmt.Sprintf("Invalid Id: %s", id), 404)
 		return
 	}
-	log.Println("URL path param 'id' is: " + string(id))
-	datastore.Store.DeleteQueue(models.QueueId(id))
-	fmt.Fprintf(w, "Delete queue")
+	result, err := datastore.Store.DeleteQueue(models.QueueId(id))
+	if err != nil {
+		http.Error(w, fmt.Sprint(err), 400)
+		return
+	}
+	if result.DeletedCount == 0 {
+		http.Error(w, fmt.Sprintf("No record found for Queue Id: %s", id), 404)
+		return
+	}
+	fmt.Fprintf(w, "Deleted Queue Id: %s", id)
+	w.WriteHeader(200)
 }
 
 func QueueCtx(next http.Handler) http.Handler {

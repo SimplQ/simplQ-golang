@@ -2,7 +2,6 @@ package datastore
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"os"
 
@@ -95,15 +94,16 @@ func (mongodb MongoDB) SetIsPaused(id models.QueueId, isPaused bool) (*mongo.Upd
 	return result, nil
 }
 
-func (mongodb MongoDB) DeleteQueue(id models.QueueId) {
+func (mongodb MongoDB) DeleteQueue(id models.QueueId) (*mongo.DeleteResult, error) {
 	queueId, _ := primitive.ObjectIDFromHex(string(id))
 	result, err := mongodb.Queue.DeleteOne(
 		context.TODO(),
 		bson.M{"_id": queueId})
 	if err != nil {
-		log.Fatal(err)
+		return result, err
 	}
-	fmt.Printf("Deleted %v Documents!\n", result.DeletedCount)
+
+	return result, nil
 }
 
 func (mongodb MongoDB) AddTokenToQueue(models.QueueId, models.Token) {

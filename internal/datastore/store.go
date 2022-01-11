@@ -16,7 +16,7 @@ type QueueStore interface {
 	SetIsPaused(models.QueueId, bool) (*mongo.UpdateResult, error)
 
 	// Set the queue delete status to new value.
-	DeleteQueue(models.QueueId)
+	DeleteQueue(models.QueueId) (*mongo.DeleteResult, error)
 
 	// Add a new token to the queue.
 	AddTokenToQueue(models.QueueId, models.Token)
