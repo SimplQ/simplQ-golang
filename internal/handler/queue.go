@@ -34,7 +34,7 @@ func CreateQueue(w http.ResponseWriter, r *http.Request) {
 	err := decoder.Decode(&q)
 
 	if err != nil {
-		panic(err)
+		http.Error(w, fmt.Sprint(err), 400)
 	}
 
 	// Initialize values
@@ -44,14 +44,14 @@ func CreateQueue(w http.ResponseWriter, r *http.Request) {
 	q.IsPaused = false
 	q.Tokens = make([]models.Token, 0)
 
-	log.Print("Create Queue: ")
-	log.Println(q)
-
-	insertedId := datastore.Store.CreateQueue(q)
-
+	insertedId, err := datastore.Store.CreateQueue(q)
+	if err != nil {
+		http.Error(w, fmt.Sprint(err), 400)
+		return
+	}
 	log.Printf("Inserted %s", insertedId)
-
-	fmt.Fprintf(w, "Post queue")
+	w.WriteHeader(201)
+	fmt.Fprintf(w, "Queue created with Id: %s", insertedId)
 }
 
 func PauseQueue(w http.ResponseWriter, r *http.Request) {
