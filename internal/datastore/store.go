@@ -7,7 +7,7 @@ import (
 
 type QueueStore interface {
 	// Create a new queue and return the queue ID.
-	CreateQueue(models.Queue) models.QueueId
+	CreateQueue(models.Queue) (models.QueueId, error)
 
 	// Read a queue by id.
 	ReadQueue(models.QueueId) (models.Queue, error)
