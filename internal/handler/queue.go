@@ -21,7 +21,6 @@ func GetQueue(w http.ResponseWriter, r *http.Request) {
 	}
 	q := datastore.Store.ReadQueue(models.QueueId(id))
 	json.NewEncoder(w).Encode(q)
-	fmt.Fprintf(w, "Get queue")
 }
 
 func CreateQueue(w http.ResponseWriter, r *http.Request) {
