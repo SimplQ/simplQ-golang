@@ -1,7 +1,7 @@
 package api
 
 type ValidationError struct {
-    Fields []string
+    Field   string
     Message string
 }
 
