@@ -19,24 +19,25 @@ func GetQueue(w http.ResponseWriter, r *http.Request) {
 func CreateQueue(w http.ResponseWriter, r *http.Request) {
     decoder := json.NewDecoder(r.Body)
 
-    var q api.CreateQueueRequest
-    err := decoder.Decode(&q)
+    var queueRequest api.CreateQueueRequest
+    err := decoder.Decode(&queueRequest)
 
     if err != nil {
         http.Error(w, fmt.Sprint(err), http.StatusBadRequest)
     }
 
     // Validation
-    validation_err, ok := q.Validate() 
+    validationErr, ok := queueRequest.Validate() 
 
     if !ok {
-        http.Error(w, validation_err.Message, http.StatusBadRequest)
+        http.Error(w, validationErr.Message, http.StatusBadRequest)
+        return
     }
 
     // Initialize values
     // Only consider queue name from the body of the request
     queue := db.Queue {
-        QueueName: q.QueueName,
+        QueueName: queueRequest.QueueName,
         CreationTime: time.Now(),
         IsDeleted: false,
         IsPaused: false,
@@ -44,7 +45,7 @@ func CreateQueue(w http.ResponseWriter, r *http.Request) {
     }
 
     log.Print("Create Queue: ")
-    log.Println(q)
+    log.Println(queueRequest)
 
     insertedId := datastore.Store.CreateQueue(queue)
 
