@@ -13,11 +13,11 @@ import (
 )
 
 func GetQueue(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintf(w, "GET Queue not implemented")
+	fmt.Fprintf(w, "GET Queue not implemented")
 }
 
 func CreateQueue(w http.ResponseWriter, r *http.Request) {
-    decoder := json.NewDecoder(r.Body)
+	decoder := json.NewDecoder(r.Body)
 
     var queueRequest api.CreateQueueRequest
     err := decoder.Decode(&queueRequest)
@@ -48,8 +48,8 @@ func CreateQueue(w http.ResponseWriter, r *http.Request) {
     log.Println(queueRequest)
 
     insertedId := datastore.Store.CreateQueue(queue)
-
+	
     log.Printf("Inserted %s", insertedId)
 
-    fmt.Fprintf(w, "Post queue")
+	fmt.Fprintf(w, "Post queue")
 }
