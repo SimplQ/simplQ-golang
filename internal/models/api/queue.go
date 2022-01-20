@@ -22,6 +22,7 @@ type CreateQueueResponse db.Queue
 
 // Minimum length of a queue name.
 const MIN_LENGTH = 4
+
 // Maximum length of a queue name.
 const MAX_LENGTH = 20
 
