@@ -2,7 +2,6 @@ package datastore
 
 import (
 	"github.com/SimplQ/simplQ-golang/internal/models"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type QueueStore interface {
@@ -13,10 +12,10 @@ type QueueStore interface {
 	ReadQueue(models.QueueId) (models.Queue, error)
 
 	// Set the queue pause status to true/false
-	SetIsPaused(models.QueueId, bool) (*mongo.UpdateResult, error)
+	SetIsPaused(models.QueueId, bool) error
 
 	// Set the queue delete status to new value.
-	DeleteQueue(models.QueueId) (*mongo.DeleteResult, error)
+	DeleteQueue(models.QueueId) error
 
 	// Add a new token to the queue.
 	AddTokenToQueue(models.QueueId, models.Token)

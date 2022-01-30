@@ -2,6 +2,7 @@ package datastore
 
 import (
 	"context"
+	"errors"
 	"log"
 	"os"
 
@@ -77,7 +78,7 @@ func (mongodb MongoDB) ReadQueue(id models.QueueId) (models.Queue, error) {
 	return result, nil
 }
 
-func (mongodb MongoDB) SetIsPaused(id models.QueueId, isPaused bool) (*mongo.UpdateResult, error) {
+func (mongodb MongoDB) SetIsPaused(id models.QueueId, isPaused bool) error {
 	queueId, _ := primitive.ObjectIDFromHex(string(id))
 	result, err := mongodb.Queue.UpdateOne(
 		context.TODO(),
@@ -86,24 +87,31 @@ func (mongodb MongoDB) SetIsPaused(id models.QueueId, isPaused bool) (*mongo.Upd
 			{Key: "$set", Value: bson.D{primitive.E{Key: "isPaused", Value: isPaused}}},
 		},
 	)
-
 	if err != nil {
-		return result, err
+		return err
 	}
+	log.Printf("Records updated:%d", result.ModifiedCount)
+	if result.ModifiedCount == 0 {
+		return errors.New("no record found")
+	}
+	return nil
 
-	return result, nil
 }
 
-func (mongodb MongoDB) DeleteQueue(id models.QueueId) (*mongo.DeleteResult, error) {
+func (mongodb MongoDB) DeleteQueue(id models.QueueId) error {
 	queueId, _ := primitive.ObjectIDFromHex(string(id))
 	result, err := mongodb.Queue.DeleteOne(
 		context.TODO(),
 		bson.M{"_id": queueId})
-	if err != nil {
-		return result, err
-	}
 
-	return result, nil
+	if err != nil {
+		return err
+	}
+	log.Printf("Records deleted:%d", result.DeletedCount)
+	if result.DeletedCount == 0 {
+		return errors.New("no record found")
+	}
+	return nil
 }
 
 func (mongodb MongoDB) AddTokenToQueue(models.QueueId, models.Token) {
