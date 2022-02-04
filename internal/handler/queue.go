@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -10,10 +11,25 @@ import (
 	"github.com/SimplQ/simplQ-golang/internal/datastore"
 	"github.com/SimplQ/simplQ-golang/internal/models/api"
 	"github.com/SimplQ/simplQ-golang/internal/models/db"
+	"github.com/go-chi/chi/v5"
 )
 
+type key int
+
+const queueId key = 0
+
 func GetQueue(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "GET Queue not implemented")
+	id := r.Context().Value(queueId).(string)
+	if id == "" {
+		http.Error(w, fmt.Sprintf("Invalid Id: %s", id), http.StatusBadRequest)
+		return
+	}
+	queue, err := datastore.Store.ReadQueue(db.QueueId(id))
+	if err != nil {
+		http.Error(w, fmt.Sprint(err), http.StatusInternalServerError)
+		return
+	}
+	json.NewEncoder(w).Encode(queue)
 }
 
 func CreateQueue(w http.ResponseWriter, r *http.Request) {
@@ -44,12 +60,65 @@ func CreateQueue(w http.ResponseWriter, r *http.Request) {
 		Tokens:       make([]db.Token, 0),
 	}
 
-	log.Print("Create Queue: ")
-	log.Println(queueRequest)
+	insertedId, err := datastore.Store.CreateQueue(queue)
+	if err != nil {
+		http.Error(w, fmt.Sprint(err), http.StatusInternalServerError)
+		return
+	}
+	
+    log.Printf("Inserted %s", insertedId)
+	w.WriteHeader(http.StatusCreated)
+	fmt.Fprintf(w, "Queue created with Id: %s", insertedId)
+}
 
-	insertedId := datastore.Store.CreateQueue(queue)
+func PauseQueue(w http.ResponseWriter, r *http.Request) {
+	id := r.Context().Value(queueId).(string)
+	if id == "" {
+		http.Error(w, fmt.Sprintf("Invalid Id: %s", id), http.StatusBadRequest)
+		return
+	}
+	err := datastore.Store.SetIsPaused(db.QueueId(id), true) // Set IsPaused = true
+	if err != nil {
+		http.Error(w, fmt.Sprint(err), http.StatusInternalServerError)
+		return
+	}
+	fmt.Fprintf(w, "Paused Queue Id: %s", id)
+	w.WriteHeader(http.StatusOK)
+}
 
-	log.Printf("Inserted %s", insertedId)
+func ResumeQueue(w http.ResponseWriter, r *http.Request) {
+	id := r.Context().Value(queueId).(string)
+	if id == "" {
+		http.Error(w, fmt.Sprintf("Invalid Id: %s", id), http.StatusBadRequest)
+		return
+	}
+	err := datastore.Store.SetIsPaused(db.QueueId(id), false) // Set IsPaused = false
+	if err != nil {
+		http.Error(w, fmt.Sprint(err), http.StatusInternalServerError)
+		return
+	}
+	fmt.Fprintf(w, "Resumed Queue Id: %s", id)
+	w.WriteHeader(http.StatusOK)
+}
 
-	fmt.Fprintf(w, "Post queue")
+func DeleteQueue(w http.ResponseWriter, r *http.Request) {
+	id := r.Context().Value(queueId).(string)
+	if id == "" {
+		http.Error(w, fmt.Sprintf("Invalid Id: %s", id), http.StatusBadRequest)
+		return
+	}
+	err := datastore.Store.DeleteQueue(db.QueueId(id))
+	if err != nil {
+		http.Error(w, fmt.Sprint(err), http.StatusInternalServerError)
+		return
+	}
+	fmt.Fprintf(w, "Deleted Queue Id: %s", id)
+	w.WriteHeader(http.StatusOK)
+}
+
+func QueueCtx(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), queueId, chi.URLParam(r, "id"))
+		next.ServeHTTP(w, r.WithContext(ctx))
+	})
 }
