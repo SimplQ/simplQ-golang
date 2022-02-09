@@ -65,8 +65,8 @@ func CreateQueue(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprint(err), http.StatusInternalServerError)
 		return
 	}
-	
-    log.Printf("Inserted %s", insertedId)
+
+	log.Printf("Inserted %s", insertedId)
 	w.WriteHeader(http.StatusCreated)
 	fmt.Fprintf(w, "Queue created with Id: %s", insertedId)
 }
