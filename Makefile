@@ -9,6 +9,7 @@ LD_FLAGS='-extldflags "-static"'
 all: build/azure_functions.zip
 
 build/azure_functions.zip: AzureFunctions/handler
+	# Create directory for build
 	mkdir -p build
 	cd AzureFunctions && zip -r ../build/azure_functions.zip *
 	# Display size of output zip
