@@ -114,14 +114,25 @@ func (mongodb MongoDB) DeleteQueue(id db.QueueId) error {
 	return nil
 }
 
-func (mongodb MongoDB) AddTokenToQueue(db.QueueId, db.Token) {
+func (mongodb MongoDB) AddTokenToQueue(id db.QueueId, token db.Token) (db.TokenId, error) {
+    token.Id = ""
+    token.QueueId = id
+    
+    result, err := mongodb.Token.InsertOne(context.TODO(), token)
+
+	if err != nil {
+		return token.Id, err
+	}
+
+	stringId := result.InsertedID.(primitive.ObjectID).Hex()
+
+	return db.TokenId(stringId), nil
+}
+
+func (mongodb MongoDB) ReadToken(db.TokenId) (db.Token, error) {
 	panic("Not implemented")
 }
 
-func (mongodb MongoDB) ReadToken(db.TokenId) {
-	panic("Not implemented")
-}
-
-func (mongodb MongoDB) RemoveToken(db.TokenId) {
+func (mongodb MongoDB) RemoveToken(db.TokenId) error {
 	panic("Not implemented")
 }

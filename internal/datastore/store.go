@@ -18,13 +18,13 @@ type QueueStore interface {
 	DeleteQueue(db.QueueId) error
 
 	// Add a new token to the queue.
-	AddTokenToQueue(db.QueueId, db.Token)
+	AddTokenToQueue(db.QueueId, db.Token) (db.TokenId, error)
 
 	// Read token by id.
-	ReadToken(db.TokenId)
+	ReadToken(db.TokenId) (db.Token, error)
 
 	// Delete token
-	RemoveToken(db.TokenId)
+	RemoveToken(db.TokenId) error
 }
 
 var Store QueueStore = NewMongoDB()
