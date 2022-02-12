@@ -115,10 +115,10 @@ func (mongodb MongoDB) DeleteQueue(id db.QueueId) error {
 }
 
 func (mongodb MongoDB) AddTokenToQueue(id db.QueueId, token db.Token) (db.TokenId, error) {
-    token.Id = ""
-    token.QueueId = id
-    
-    result, err := mongodb.Token.InsertOne(context.TODO(), token)
+	token.Id = ""
+	token.QueueId = id
+
+	result, err := mongodb.Token.InsertOne(context.TODO(), token)
 
 	if err != nil {
 		return token.Id, err

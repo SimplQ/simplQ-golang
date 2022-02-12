@@ -34,10 +34,10 @@ func InitalizeRoutes() chi.Router {
 		})
 	})
 
-    // Routes for "token" resource
-    r.Route("/token", func(r chi.Router) {
-        // Add new token to queue
-        r.Post("/", handler.CreateToken)
-    })
+	// Routes for "token" resource
+	r.Route("/token", func(r chi.Router) {
+		// Add new token to queue
+		r.Post("/", handler.CreateToken)
+	})
 	return r
 }

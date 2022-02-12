@@ -11,8 +11,8 @@ type Token struct {
 	// Unique ID for the token.
 	Id TokenId
 
-    // QueueId of the Queue that this token belongs to
-    QueueId QueueId
+	// QueueId of the Queue that this token belongs to
+	QueueId QueueId
 
 	// Name of the token, typically name of the person to whom the token was
 	// issued.
