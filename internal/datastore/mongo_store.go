@@ -75,31 +75,31 @@ func (mongodb MongoDB) ReadQueue(id db.QueueId) (db.Queue, error) {
 		return result, err
 	}
 
-    filterStage := bson.D{
-        // queueid is a string this time
-        { Key: "$match", Value: bson.M{ "queueid": id} },
-    }
+	filterStage := bson.D{
+		// queueid is a string this time
+		{Key: "$match", Value: bson.M{"queueid": id}},
+	}
 
-    // sort tokens by ascending order of creation time
-    sortStage := bson.D{
-        {Key: "$sort", Value: bson.D{
-            {Key: "creationtime", Value: 1},
-            {Key: "_id", Value: 1},
-        }},
-    }
+	// sort tokens by ascending order of creation time
+	sortStage := bson.D{
+		{Key: "$sort", Value: bson.D{
+			{Key: "creationtime", Value: 1},
+			{Key: "_id", Value: 1},
+		}},
+	}
 
-    cursor, err := mongodb.Token.Aggregate(context.TODO(), mongo.Pipeline{filterStage, sortStage})
+	cursor, err := mongodb.Token.Aggregate(context.TODO(), mongo.Pipeline{filterStage, sortStage})
 
-    var tokens []db.Token
+	var tokens []db.Token
 
-    if err = cursor.All(context.TODO(), &tokens); err != nil {
-        log.Fatal(err)
-        return result, err
-    }
+	if err = cursor.All(context.TODO(), &tokens); err != nil {
+		log.Fatal(err)
+		return result, err
+	}
 
-    log.Printf("%d tokens in queue", len(tokens))
+	log.Printf("%d tokens in queue", len(tokens))
 
-    result.Tokens = tokens
+	result.Tokens = tokens
 
 	return result, nil
 }
