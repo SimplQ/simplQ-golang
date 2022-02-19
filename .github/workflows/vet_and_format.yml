@@ -1,4 +1,4 @@
-name: Post-push-checks
+name: PR-checks
 
 on: [pull_request]
       
