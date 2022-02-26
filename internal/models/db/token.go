@@ -14,8 +14,8 @@ type Token struct {
 	// QueueId of the Queue that this token belongs to
 	QueueId QueueId
 
-    // Number representing the position of the token in the queue
-    TokenNumber uint32
+	// Number representing the position of the token in the queue
+	TokenNumber uint32
 
 	// Name of the token, typically name of the person to whom the token was
 	// issued.

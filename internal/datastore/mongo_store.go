@@ -5,7 +5,7 @@ import (
 	"errors"
 	"log"
 	"os"
-    "sync"
+	"sync"
 
 	"github.com/SimplQ/simplQ-golang/internal/models/db"
 
@@ -79,22 +79,22 @@ func (mongodb MongoDB) ReadQueue(id db.QueueId) (db.Queue, error) {
 		return result, err
 	}
 
-    filter := bson.D{
-        // queueid is a string this time
-        { Key: "queueid", Value: id },
-    }
+	filter := bson.D{
+		// queueid is a string this time
+		{Key: "queueid", Value: id},
+	}
 
-    // sort tokens by ascending order of token number
-    sort := bson.D {
-        {Key: "tokennumber", Value: 1},
-    }
+	// sort tokens by ascending order of token number
+	sort := bson.D{
+		{Key: "tokennumber", Value: 1},
+	}
 
-    findOptions := options.Find()
-    findOptions.SetSort(sort)
+	findOptions := options.Find()
+	findOptions.SetSort(sort)
 
-    cursor, err := mongodb.Token.Find(context.TODO(), filter, findOptions)
-	
-    var tokens []db.Token
+	cursor, err := mongodb.Token.Find(context.TODO(), filter, findOptions)
+
+	var tokens []db.Token
 
 	if err = cursor.All(context.TODO(), &tokens); err != nil {
 		log.Fatal(err)
@@ -148,23 +148,23 @@ func (mongodb MongoDB) AddTokenToQueue(id db.QueueId, token db.Token) (db.TokenI
 	token.Id = ""
 	token.QueueId = id
 
-    // Lock queue to ensure 2 concurrent add tokens don't happen
-    queueMutex.Lock()
+	// Lock queue to ensure 2 concurrent add tokens don't happen
+	queueMutex.Lock()
 
-    // if there were 2 concurrent calls to this function, 2 tokens might get the same number
-    max, err := mongodb.GetMaxToken(id)
+	// if there were 2 concurrent calls to this function, 2 tokens might get the same number
+	max, err := mongodb.GetMaxToken(id)
 
-    if err != nil {
-        log.Fatal(err)
-        queueMutex.Unlock()
-        return token.Id, err
-    }
+	if err != nil {
+		log.Fatal(err)
+		queueMutex.Unlock()
+		return token.Id, err
+	}
 
-    token.TokenNumber = max + 1
-	
-    result, err := mongodb.Token.InsertOne(context.TODO(), token)
+	token.TokenNumber = max + 1
 
-    queueMutex.Unlock()
+	result, err := mongodb.Token.InsertOne(context.TODO(), token)
+
+	queueMutex.Unlock()
 
 	if err != nil {
 		return token.Id, err
@@ -176,52 +176,52 @@ func (mongodb MongoDB) AddTokenToQueue(id db.QueueId, token db.Token) (db.TokenI
 }
 
 func (mongodb MongoDB) GetMaxToken(id db.QueueId) (uint32, error) {
-    filter := bson.D{
-        // queueid is a string this time
-        { Key: "queueid", Value: id },
-    }
+	filter := bson.D{
+		// queueid is a string this time
+		{Key: "queueid", Value: id},
+	}
 
-    sort := bson.D {
-        {Key: "tokennumber", Value: -1},
-    }
+	sort := bson.D{
+		{Key: "tokennumber", Value: -1},
+	}
 
-    findOptions := options.Find()
-    findOptions.SetSort(sort)
-    findOptions.SetLimit(1)
+	findOptions := options.Find()
+	findOptions.SetSort(sort)
+	findOptions.SetLimit(1)
 
-    cursor, err := mongodb.Token.Find(context.TODO(), filter, findOptions)
+	cursor, err := mongodb.Token.Find(context.TODO(), filter, findOptions)
 
-    if err != nil {
-        return 0, err
-    }
+	if err != nil {
+		return 0, err
+	}
 
-    var tokens []db.Token
+	var tokens []db.Token
 
-    if err = cursor.All(context.TODO(), &tokens); err != nil {
-        log.Println(err)
-        return 0, err
-    }
+	if err = cursor.All(context.TODO(), &tokens); err != nil {
+		log.Println(err)
+		return 0, err
+	}
 
-    if len(tokens) <= 0 {
-        return 0, nil
-    }
+	if len(tokens) <= 0 {
+		return 0, nil
+	}
 
-    return tokens[0].TokenNumber, nil
+	return tokens[0].TokenNumber, nil
 }
 
 func (mongodb MongoDB) ReadToken(id db.TokenId) (db.Token, error) {
 	tokenId, _ := primitive.ObjectIDFromHex(string(id))
 
-    var result db.Token
+	var result db.Token
 
-    err := mongodb.Token.FindOne(context.TODO(), bson.M{"_id": tokenId}).Decode(&result)
+	err := mongodb.Token.FindOne(context.TODO(), bson.M{"_id": tokenId}).Decode(&result)
 
-    if err != nil {
-        log.Fatal(err)
-        return result, err
-    }
+	if err != nil {
+		log.Fatal(err)
+		return result, err
+	}
 
-    return result, nil
+	return result, nil
 }
 
 func (mongodb MongoDB) RemoveToken(db.TokenId) error {
