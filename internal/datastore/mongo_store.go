@@ -93,17 +93,17 @@ func (mongodb MongoDB) ReadQueue(id db.QueueId) (db.Queue, error) {
     findOptions.SetSort(sort)
 
     cursor, err := mongodb.Token.Find(context.TODO(), filter, findOptions)
-
+	
     var tokens []db.Token
 
-    if err = cursor.All(context.TODO(), &tokens); err != nil {
-        log.Fatal(err)
-        return result, err
-    }
+	if err = cursor.All(context.TODO(), &tokens); err != nil {
+		log.Fatal(err)
+		return result, err
+	}
 
-    log.Printf("%d tokens in queue", len(tokens))
+	log.Printf("%d tokens in queue", len(tokens))
 
-    result.Tokens = tokens
+	result.Tokens = tokens
 
 	return result, nil
 }
