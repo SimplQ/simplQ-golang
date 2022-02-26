@@ -57,20 +57,20 @@ func CreateToken(w http.ResponseWriter, r *http.Request) {
 
 func GetToken(w http.ResponseWriter, r *http.Request) {
 	id := r.Context().Value(tokenId).(string)
-    
-    if id == "" {
+
+	if id == "" {
 		http.Error(w, fmt.Sprintf("Invalid Id: %s", id), http.StatusBadRequest)
 		return
 	}
 
-    token, err := datastore.Store.ReadToken(db.TokenId(id))
- 
-    if err != nil {
+	token, err := datastore.Store.ReadToken(db.TokenId(id))
+
+	if err != nil {
 		http.Error(w, fmt.Sprint(err), http.StatusInternalServerError)
 		return
 	}
 
-    json.NewEncoder(w).Encode(token)
+	json.NewEncoder(w).Encode(token)
 }
 
 func TokenCtx(next http.Handler) http.Handler {
