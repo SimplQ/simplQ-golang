@@ -38,6 +38,11 @@ func InitalizeRoutes() chi.Router {
 	r.Route("/token", func(r chi.Router) {
 		// Add new token to queue
 		r.Post("/", handler.CreateToken)
+
+        r.Route("/{id}", func(r chi.Router){
+            r.Use(handler.TokenCtx)
+            r.Get("/", handler.GetToken)
+        })
 	})
 	return r
 }
