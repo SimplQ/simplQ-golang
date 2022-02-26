@@ -27,9 +27,15 @@ type AddTokenRequest struct {
 // AddTokenResponse is a model to structure the response of an add token request.
 type AddTokenResponse db.TokenId
 
+// Minimum length of a token name
+const MIN_LENGTH_TOKEN_NAME = 4
+
+// Maximum length of a token name
+const MAX_LENGTH_TOKEN_NAME = 20
+
 func (req AddTokenRequest) Validate() (ValidationError, bool) {
-	if len(req.Name) < MIN_LENGTH || len(req.Name) > MAX_LENGTH {
-		message := fmt.Sprintf("Token name length should be greater than %d characters and less than %d characters", MIN_LENGTH, MAX_LENGTH)
+	if len(req.Name) < MIN_LENGTH_TOKEN_NAME || len(req.Name) > MAX_LENGTH_TOKEN_NAME {
+		message := fmt.Sprintf("Token name length should be greater than %d characters and less than %d characters", MIN_LENGTH_TOKEN_NAME, MAX_LENGTH_TOKEN_NAME)
 		return ValidationError{
 			Field:   "Name",
 			Message: message,
