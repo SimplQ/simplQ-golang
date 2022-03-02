@@ -3,9 +3,10 @@ package api
 
 import (
 	"fmt"
-	"strconv"
+	"log"
 
 	"github.com/SimplQ/simplQ-golang/internal/models/db"
+	"github.com/ttacon/libphonenumber"
 )
 
 // AddTokenRequest is a model to structure an add token request.
@@ -40,14 +41,9 @@ func (req AddTokenRequest) Validate() (ValidationError, bool) {
 			Field:   "Name",
 			Message: message,
 		}, false
-	} else if len(req.ContactNumber) != 10 {
-		message := fmt.Sprintf("Contact number should be 10 digits")
-		return ValidationError{
-			Field:   "ContactNumber",
-			Message: message,
-		}, false
-	} else if _, err := strconv.Atoi(req.ContactNumber); err != nil {
-		message := fmt.Sprintf("Contact number should only consist of digits")
+    } else if num, err := libphonenumber.Parse(req.ContactNumber, "IN"); err != nil {
+        log.Println(num)
+		message := fmt.Sprint(err)
 		return ValidationError{
 			Field:   "ContactNumber",
 			Message: message,
