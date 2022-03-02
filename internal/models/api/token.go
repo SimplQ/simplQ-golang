@@ -41,8 +41,8 @@ func (req AddTokenRequest) Validate() (ValidationError, bool) {
 			Field:   "Name",
 			Message: message,
 		}, false
-    } else if num, err := libphonenumber.Parse(req.ContactNumber, "IN"); err != nil {
-        log.Println(num)
+	} else if num, err := libphonenumber.Parse(req.ContactNumber, "IN"); err != nil {
+		log.Println(num)
 		message := fmt.Sprint(err)
 		return ValidationError{
 			Field:   "ContactNumber",

@@ -167,7 +167,7 @@ func (mongodb MongoDB) AddTokenToQueue(id db.QueueId, token db.Token) (db.TokenI
 	queueMutex.Unlock()
 
 	if err != nil {
-        log.Println(err);
+		log.Println(err)
 		return token.Id, err
 	}
 
