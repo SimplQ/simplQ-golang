@@ -6,9 +6,15 @@ import (
 	"os"
 
 	"github.com/SimplQ/simplQ-golang/internal/mux"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
+    // Load environment variables if .env file is present
+    // ignore if not present
+    godotenv.Load();
+
 	routes := mux.InitalizeRoutes()
 
 	listenAddr := ":8080"

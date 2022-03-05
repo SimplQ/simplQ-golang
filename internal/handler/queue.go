@@ -20,12 +20,17 @@ const queueId key = 0
 
 func GetQueue(w http.ResponseWriter, r *http.Request) {
 	id := r.Context().Value(queueId).(string)
-	if id == "" {
+	uid := r.Context().Value("uid").(string)
+    log.Println(uid)
+	
+    if id == "" {
 		http.Error(w, fmt.Sprintf("Invalid Id: %s", id), http.StatusBadRequest)
 		return
 	}
-	queue, err := datastore.Store.ReadQueue(db.QueueId(id))
-	if err != nil {
+	
+    queue, err := datastore.Store.ReadQueue(db.QueueId(id))
+	
+    if err != nil {
 		http.Error(w, fmt.Sprint(err), http.StatusInternalServerError)
 		return
 	}

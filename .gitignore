@@ -20,3 +20,6 @@ build/
 
 # temporary build files create by air
 tmp/
+
+# env file
+.env
