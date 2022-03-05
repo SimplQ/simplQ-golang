@@ -11,9 +11,9 @@ import (
 )
 
 func main() {
-    // Load environment variables if .env file is present
-    // ignore if not present
-    godotenv.Load();
+	// Load environment variables if .env file is present
+	// ignore if not present
+	godotenv.Load()
 
 	routes := mux.InitalizeRoutes()
 

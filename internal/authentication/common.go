@@ -21,67 +21,67 @@ const ANONYMOUS_PREFIX = "Anonymous"
 const BEARER_PREFIX = "Bearer"
 
 func AuthMiddleware(next http.Handler) http.Handler {
-    tokenValidator := GetJWTValidator()
+	tokenValidator := GetJWTValidator()
 
-    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-        authorization_header := r.Header.Get("Authorization")
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		authorization_header := r.Header.Get("Authorization")
 
-        errorMessage := "Invalid authorization"
+		errorMessage := "Invalid authorization"
 
-        if (strings.HasPrefix(authorization_header, ANONYMOUS_PREFIX)) {
-            // For anonymous authentication
+		if strings.HasPrefix(authorization_header, ANONYMOUS_PREFIX) {
+			// For anonymous authentication
 
-            // Get the token from the header
-            uid := strings.Split(authorization_header, ANONYMOUS_PREFIX)[1]
-            uid = strings.Trim(uid, " \n\r")
+			// Get the token from the header
+			uid := strings.Split(authorization_header, ANONYMOUS_PREFIX)[1]
+			uid = strings.Trim(uid, " \n\r")
 
-            // If a valid token is present
-            if (len(uid) > 0) { 
-                // Add given token as uid to the context
-                ctx := context.WithValue(r.Context(), "uid", uid)
-                next.ServeHTTP(w, r.WithContext(ctx))
-                return
-            }
+			// If a valid token is present
+			if len(uid) > 0 {
+				// Add given token as uid to the context
+				ctx := context.WithValue(r.Context(), "uid", uid)
+				next.ServeHTTP(w, r.WithContext(ctx))
+				return
+			}
 
-            errorMessage = "Found no anonymous token"
-        } else if (strings.HasPrefix(authorization_header, BEARER_PREFIX)) {
-            // For bearer authentication
+			errorMessage = "Found no anonymous token"
+		} else if strings.HasPrefix(authorization_header, BEARER_PREFIX) {
+			// For bearer authentication
 
-            // Get the JWT token from the header
-            token := strings.Split(authorization_header, BEARER_PREFIX)[1]
-            token = strings.Trim(token, " \n\r")
+			// Get the JWT token from the header
+			token := strings.Split(authorization_header, BEARER_PREFIX)[1]
+			token = strings.Trim(token, " \n\r")
 
-            // if a token is present
-            if (len(token) > 0) { 
-                // Validate the JWT token and get claims
-                tokenDecoded, err := tokenValidator.ValidateToken(context.TODO(), token)
+			// if a token is present
+			if len(token) > 0 {
+				// Validate the JWT token and get claims
+				tokenDecoded, err := tokenValidator.ValidateToken(context.TODO(), token)
 
-                if err == nil {
-                    tokenDecoded := tokenDecoded.(*validator.ValidatedClaims)
+				if err == nil {
+					tokenDecoded := tokenDecoded.(*validator.ValidatedClaims)
 
-                    // Use the "sub" claim as the uid
-                    uid := tokenDecoded.RegisteredClaims.Subject
+					// Use the "sub" claim as the uid
+					uid := tokenDecoded.RegisteredClaims.Subject
 
-                    // if a valid uid is present
-                    if (len(uid) > 0) {
-                        // Add the given "sub" as the uid to the context
-                        ctx := context.WithValue(r.Context(), "uid", uid)
-                        next.ServeHTTP(w, r.WithContext(ctx))
-                        return
-                    }
-                } else {
-                    log.Println(err)
-                }
-            }
-            errorMessage = "Invalid authentication token"
-        }
+					// if a valid uid is present
+					if len(uid) > 0 {
+						// Add the given "sub" as the uid to the context
+						ctx := context.WithValue(r.Context(), "uid", uid)
+						next.ServeHTTP(w, r.WithContext(ctx))
+						return
+					}
+				} else {
+					log.Println(err)
+				}
+			}
+			errorMessage = "Invalid authentication token"
+		}
 
-        // If the next handler wasn't called, authentication failed
-        // return Unauthorized http error
-        w.Header().Set("Content-Type", "application/json")
-        w.WriteHeader(http.StatusUnauthorized)
-        w.Write([]byte(fmt.Sprintf(`{"message": "%s"}`, errorMessage)))
-    })
+		// If the next handler wasn't called, authentication failed
+		// return Unauthorized http error
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write([]byte(fmt.Sprintf(`{"message": "%s"}`, errorMessage)))
+	})
 }
 
 // Returns a JWT Token validator
@@ -105,5 +105,5 @@ func GetJWTValidator() *validator.Validator {
 		log.Fatalf("Failed to set up the jwt validator")
 	}
 
-    return jwtValidator
+	return jwtValidator
 }

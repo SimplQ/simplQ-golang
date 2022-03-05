@@ -6,8 +6,8 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 
-	"github.com/SimplQ/simplQ-golang/internal/handler"
 	"github.com/SimplQ/simplQ-golang/internal/authentication"
+	"github.com/SimplQ/simplQ-golang/internal/handler"
 )
 
 func InitalizeRoutes() chi.Router {
@@ -22,8 +22,8 @@ func InitalizeRoutes() chi.Router {
 
 	// Routes for "queue" resource
 	r.Route("/queue", func(r chi.Router) {
-        // all routes under queue are required to have authentication
-        r.Use(authentication.AuthMiddleware)
+		// all routes under queue are required to have authentication
+		r.Use(authentication.AuthMiddleware)
 		// POST /articles
 		r.Post("/", handler.CreateQueue)
 
@@ -39,8 +39,8 @@ func InitalizeRoutes() chi.Router {
 
 	// Routes for "token" resource
 	r.Route("/token", func(r chi.Router) {
-        // all routes under token are required to have authentication
-        r.Use(authentication.AuthMiddleware)
+		// all routes under token are required to have authentication
+		r.Use(authentication.AuthMiddleware)
 		// Add new token to queue
 		r.Post("/", handler.CreateToken)
 
