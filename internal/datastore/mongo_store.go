@@ -150,8 +150,8 @@ func (mongodb MongoDB) AddTokenToQueue(id db.QueueId, token db.Token) (db.TokenI
 
 	// Lock queue to ensure 2 concurrent add tokens don't happen
 	queueMutex.Lock()
-    // Unlock the mutex before returning
-    defer queueMutex.Unlock()
+	// Unlock the mutex before returning
+	defer queueMutex.Unlock()
 
 	// if there were 2 concurrent calls to this function, 2 tokens might get the same number
 	max, err := mongodb.GetMaxToken(id)
@@ -176,13 +176,13 @@ func (mongodb MongoDB) AddTokenToQueue(id db.QueueId, token db.Token) (db.TokenI
 }
 
 func (mongodb MongoDB) GetMaxToken(id db.QueueId) (uint32, error) {
-    // select all tokens that belong to this queue
+	// select all tokens that belong to this queue
 	filter := bson.D{
 		// queueid is a string this time
 		{Key: "queueid", Value: id},
 	}
 
-    // sort tokens by descending order of token number
+	// sort tokens by descending order of token number
 	sortFilter := bson.D{
 		{Key: "tokennumber", Value: -1},
 	}
@@ -208,8 +208,8 @@ func (mongodb MongoDB) GetMaxToken(id db.QueueId) (uint32, error) {
 		return 0, nil
 	}
 
-    // return the token number of the first token
-    // first token is highest as the list is in descending order
+	// return the token number of the first token
+	// first token is highest as the list is in descending order
 	return tokens[0].TokenNumber, nil
 }
 
