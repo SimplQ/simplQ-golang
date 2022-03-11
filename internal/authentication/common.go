@@ -20,12 +20,18 @@ const ANONYMOUS_PREFIX = "Anonymous"
 // Prefix of the authorization header for an authenticated user
 const BEARER_PREFIX = "Bearer"
 
+// Authentication Middleware
+// Calls the next handler with `uid` in the `context` which can be used as a unique
+// id for any user.
+// Returns `http.StatusUnauthorized` to the client if the authorization token is not
+// found or is invalid.
 func AuthMiddleware(next http.Handler) http.Handler {
 	tokenValidator := GetJWTValidator()
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		authorization_header := r.Header.Get("Authorization")
 
+        // Default error message
 		errorMessage := "Invalid authorization"
 
 		if strings.HasPrefix(authorization_header, ANONYMOUS_PREFIX) {
@@ -43,7 +49,7 @@ func AuthMiddleware(next http.Handler) http.Handler {
 				return
 			}
 
-			errorMessage = "Found no anonymous token"
+			errorMessage = "Anonymous token not found"
 		} else if strings.HasPrefix(authorization_header, BEARER_PREFIX) {
 			// For bearer authentication
 
