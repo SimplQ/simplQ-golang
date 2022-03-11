@@ -31,7 +31,7 @@ func AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		authorization_header := r.Header.Get("Authorization")
 
-        // Default error message
+		// Default error message
 		errorMessage := "Invalid authorization"
 
 		if strings.HasPrefix(authorization_header, ANONYMOUS_PREFIX) {
