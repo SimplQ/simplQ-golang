@@ -11,6 +11,12 @@ type Token struct {
 	// Unique ID for the token.
 	Id TokenId
 
+	// QueueId of the Queue that this token belongs to
+	QueueId QueueId
+
+	// Number representing the position of the token in the queue
+	TokenNumber uint32
+
 	// Name of the token, typically name of the person to whom the token was
 	// issued.
 	Name string

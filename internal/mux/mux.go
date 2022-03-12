@@ -33,5 +33,16 @@ func InitalizeRoutes() chi.Router {
 			r.Delete("/", handler.DeleteQueue)    // DELETE /queue/123
 		})
 	})
+
+	// Routes for "token" resource
+	r.Route("/token", func(r chi.Router) {
+		// Add new token to queue
+		r.Post("/", handler.CreateToken)
+
+		r.Route("/{id}", func(r chi.Router) {
+			r.Use(handler.TokenCtx)
+			r.Get("/", handler.GetToken)
+		})
+	})
 	return r
 }

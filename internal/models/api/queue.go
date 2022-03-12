@@ -21,16 +21,16 @@ type CreateQueueRequest struct {
 type CreateQueueResponse db.Queue
 
 // Minimum length of a queue name.
-const MIN_LENGTH = 4
+const MIN_LENGTH_QUEUE_NAME = 4
 
 // Maximum length of a queue name.
-const MAX_LENGTH = 20
+const MAX_LENGTH_QUEUE_NAME = 20
 
 // Validate function for CreateQueueRequest validates if the queue name is within
 // the defined range.
 func (req CreateQueueRequest) Validate() (ValidationError, bool) {
-	if len(req.QueueName) < MIN_LENGTH || len(req.QueueName) > MAX_LENGTH {
-		message := fmt.Sprintf("Queue name length should be greater than %d characters and less than %d charaacters", MIN_LENGTH, MAX_LENGTH)
+	if len(req.QueueName) < MIN_LENGTH_QUEUE_NAME || len(req.QueueName) > MAX_LENGTH_QUEUE_NAME {
+		message := fmt.Sprintf("Queue name length should be greater than %d characters and less than %d charaacters", MIN_LENGTH_QUEUE_NAME, MAX_LENGTH_QUEUE_NAME)
 		return ValidationError{
 			Field:   "QueueName",
 			Message: message,
