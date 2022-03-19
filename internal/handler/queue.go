@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/SimplQ/simplQ-golang/internal/authentication"
 	"github.com/SimplQ/simplQ-golang/internal/datastore"
 	"github.com/SimplQ/simplQ-golang/internal/models/api"
 	"github.com/SimplQ/simplQ-golang/internal/models/db"
@@ -20,7 +21,7 @@ const queueId key = 0
 
 func GetQueue(w http.ResponseWriter, r *http.Request) {
 	id := r.Context().Value(queueId).(string)
-	uid := r.Context().Value("uid").(string)
+	uid := r.Context().Value(authentication.UID).(string)
 	log.Println(uid)
 
 	if id == "" {

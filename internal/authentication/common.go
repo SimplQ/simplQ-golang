@@ -20,6 +20,9 @@ const ANONYMOUS_PREFIX = "Anonymous"
 // Prefix of the authorization header for an authenticated user
 const BEARER_PREFIX = "Bearer"
 
+// Key for the "uid" stored in context
+const UID = "uid"
+
 // Authentication Middleware
 // Calls the next handler with `uid` in the `context` which can be used as a unique
 // id for any user.
@@ -44,7 +47,7 @@ func AuthMiddleware(next http.Handler) http.Handler {
 			// If a valid token is present
 			if len(uid) > 0 {
 				// Add given token as uid to the context
-				ctx := context.WithValue(r.Context(), "uid", uid)
+				ctx := context.WithValue(r.Context(), UID, uid)
 				next.ServeHTTP(w, r.WithContext(ctx))
 				return
 			}
@@ -71,7 +74,7 @@ func AuthMiddleware(next http.Handler) http.Handler {
 					// if a valid uid is present
 					if len(uid) > 0 {
 						// Add the given "sub" as the uid to the context
-						ctx := context.WithValue(r.Context(), "uid", uid)
+						ctx := context.WithValue(r.Context(), UID, uid)
 						next.ServeHTTP(w, r.WithContext(ctx))
 						return
 					}
