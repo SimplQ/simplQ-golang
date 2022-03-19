@@ -29,7 +29,7 @@ const UID = "uid"
 // Returns `http.StatusUnauthorized` to the client if the authorization token is not
 // found or is invalid.
 func AuthMiddleware(next http.Handler) http.Handler {
-	tokenValidator := GetJWTValidator()
+	tokenValidator := getJWTValidator()
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		authorization_header := r.Header.Get("Authorization")
@@ -94,7 +94,7 @@ func AuthMiddleware(next http.Handler) http.Handler {
 }
 
 // Returns a JWT Token validator
-func GetJWTValidator() *validator.Validator {
+func getJWTValidator() *validator.Validator {
 	issuerURL, err := url.Parse("https://" + os.Getenv("AUTH0_DOMAIN") + "/")
 	if err != nil {
 		log.Fatalf("Failed to parse the issuer url: %v", err)
