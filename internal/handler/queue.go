@@ -22,7 +22,7 @@ const queueId key = 0
 func GetQueue(w http.ResponseWriter, r *http.Request) {
 	id := r.Context().Value(queueId).(string)
 	uid := r.Context().Value(authentication.UID).(string)
-    // TODO: Remove print statement once uid is made use of
+	// TODO: Remove print statement once uid is made use of
 	log.Println(uid)
 
 	if id == "" {
