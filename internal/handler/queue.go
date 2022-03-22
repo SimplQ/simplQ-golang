@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/SimplQ/simplQ-golang/internal/authentication"
 	"github.com/SimplQ/simplQ-golang/internal/datastore"
 	"github.com/SimplQ/simplQ-golang/internal/models/api"
 	"github.com/SimplQ/simplQ-golang/internal/models/db"
@@ -20,11 +21,17 @@ const queueId key = 0
 
 func GetQueue(w http.ResponseWriter, r *http.Request) {
 	id := r.Context().Value(queueId).(string)
+	uid := r.Context().Value(authentication.UID).(string)
+	// TODO: Remove print statement once uid is made use of
+	log.Println(uid)
+
 	if id == "" {
 		http.Error(w, fmt.Sprintf("Invalid Id: %s", id), http.StatusBadRequest)
 		return
 	}
+
 	queue, err := datastore.Store.ReadQueue(db.QueueId(id))
+
 	if err != nil {
 		http.Error(w, fmt.Sprint(err), http.StatusInternalServerError)
 		return
