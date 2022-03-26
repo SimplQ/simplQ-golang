@@ -14,7 +14,7 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-const tokenId key = 0
+const TOKEN_ID = "tokenId"
 
 func CreateToken(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
@@ -56,7 +56,7 @@ func CreateToken(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetToken(w http.ResponseWriter, r *http.Request) {
-	id := r.Context().Value(tokenId).(string)
+	id := r.Context().Value(TOKEN_ID).(string)
 
 	if id == "" {
 		http.Error(w, fmt.Sprintf("Invalid Id: %s", id), http.StatusBadRequest)
@@ -75,7 +75,7 @@ func GetToken(w http.ResponseWriter, r *http.Request) {
 
 func TokenCtx(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		ctx := context.WithValue(r.Context(), tokenId, chi.URLParam(r, "id"))
+		ctx := context.WithValue(r.Context(), TOKEN_ID, chi.URLParam(r, "id"))
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
