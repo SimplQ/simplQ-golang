@@ -39,8 +39,8 @@ func CreateQueue(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 
 	uid := r.Context().Value(authentication.UID).(string)
-	
-    var queueRequest api.CreateQueueRequest
+
+	var queueRequest api.CreateQueueRequest
 	err := decoder.Decode(&queueRequest)
 
 	if err != nil {
@@ -59,7 +59,7 @@ func CreateQueue(w http.ResponseWriter, r *http.Request) {
 	// Only consider queue name from the body of the request
 	queue := db.Queue{
 		QueueName:    queueRequest.QueueName,
-        Owner:        uid,
+		Owner:        uid,
 		CreationTime: time.Now(),
 		IsDeleted:    false,
 		IsPaused:     false,
@@ -124,22 +124,22 @@ func DeleteQueue(w http.ResponseWriter, r *http.Request) {
 
 func QueueMiddlware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-        queueId := chi.URLParam(r, "id")
-	    uid := r.Context().Value(authentication.UID).(string)
+		queueId := chi.URLParam(r, "id")
+		uid := r.Context().Value(authentication.UID).(string)
 
-        queue, err := datastore.Store.ReadQueue(db.QueueId(queueId))
+		queue, err := datastore.Store.ReadQueue(db.QueueId(queueId))
 
-        if err != nil {
-            log.Println(err);
-            http.Error(w, "Database error", http.StatusInternalServerError)
-            return
-        }
+		if err != nil {
+			log.Println(err)
+			http.Error(w, "Database error", http.StatusInternalServerError)
+			return
+		}
 
-        // Only owner of the queue is allowed to pass through this middleware
-        if queue.Owner != uid {
-            http.Error(w, "Unauthorized", http.StatusUnauthorized)
-            return
-        }
+		// Only owner of the queue is allowed to pass through this middleware
+		if queue.Owner != uid {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
 
 		ctx := context.WithValue(r.Context(), QUEUE_ID, queueId)
 		next.ServeHTTP(w, r.WithContext(ctx))

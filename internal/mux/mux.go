@@ -29,8 +29,8 @@ func InitalizeRoutes() chi.Router {
 
 		// Subrouters
 		r.Route("/{id}", func(r chi.Router) {
-            // all routes under this require the authenticated user to be the owner
-            // of the queue
+			// all routes under this require the authenticated user to be the owner
+			// of the queue
 			r.Use(handler.QueueMiddlware)
 			r.Get("/", handler.GetQueue)          // GET /queue/123
 			r.Put("/pause", handler.PauseQueue)   // PUT /queue/123/pause
@@ -49,7 +49,7 @@ func InitalizeRoutes() chi.Router {
 		r.Route("/{id}", func(r chi.Router) {
 			r.Use(handler.TokenMiddleware)
 			r.Get("/", handler.GetToken)
-            r.Delete("/", handler.DeleteToken)
+			r.Delete("/", handler.DeleteToken)
 		})
 	})
 	return r

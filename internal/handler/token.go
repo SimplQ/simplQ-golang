@@ -75,41 +75,41 @@ func GetToken(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteToken(w http.ResponseWriter, r *http.Request) {
-    log.Println("Delete token")
-    id := r.Context().Value(TOKEN_ID).(string)
-    uid := r.Context().Value(authentication.UID).(string)
+	log.Println("Delete token")
+	id := r.Context().Value(TOKEN_ID).(string)
+	uid := r.Context().Value(authentication.UID).(string)
 
-    if id == "" {
-        http.Error(w, "Invalid Id", http.StatusBadRequest)
-        return
-    }
- 
+	if id == "" {
+		http.Error(w, "Invalid Id", http.StatusBadRequest)
+		return
+	}
+
 	token, err := datastore.Store.ReadToken(db.TokenId(id))
 
-    log.Println("Read token")
+	log.Println("Read token")
 
-    if err != nil {
-        http.Error(w, fmt.Sprint(err), http.StatusInternalServerError)
-        return
-    }
+	if err != nil {
+		http.Error(w, fmt.Sprint(err), http.StatusInternalServerError)
+		return
+	}
 
-    queueId := token.QueueId
+	queueId := token.QueueId
 
-    queue, err := datastore.Store.ReadQueue(db.QueueId(queueId))
+	queue, err := datastore.Store.ReadQueue(db.QueueId(queueId))
 
-    if queue.Owner != uid {
-        http.Error(w, "Unauthorized", http.StatusUnauthorized)
-        return
-    }
+	if queue.Owner != uid {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
 
-    err = datastore.Store.RemoveToken(db.TokenId(id))
+	err = datastore.Store.RemoveToken(db.TokenId(id))
 
-    if err != nil {
-        http.Error(w, fmt.Sprint(err), http.StatusInternalServerError)
-        return
-    }
+	if err != nil {
+		http.Error(w, fmt.Sprint(err), http.StatusInternalServerError)
+		return
+	}
 
-    fmt.Fprintf(w, "Deleted token %s", id)
+	fmt.Fprintf(w, "Deleted token %s", id)
 }
 
 func TokenMiddleware(next http.Handler) http.Handler {

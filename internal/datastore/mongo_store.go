@@ -222,7 +222,7 @@ func (mongodb MongoDB) ReadToken(id db.TokenId) (db.Token, error) {
 	err := mongodb.Token.FindOne(context.TODO(), bson.M{"_id": tokenId}).Decode(&result)
 
 	if err != nil {
-        log.Println("Error reading token: ", err)
+		log.Println("Error reading token: ", err)
 		return result, err
 	}
 
@@ -232,25 +232,25 @@ func (mongodb MongoDB) ReadToken(id db.TokenId) (db.Token, error) {
 func (mongodb MongoDB) RemoveToken(id db.TokenId) error {
 	tokenId, _ := primitive.ObjectIDFromHex(string(id))
 
-    filter := bson.M{ "_id": tokenId }
+	filter := bson.M{"_id": tokenId}
 
-    update := bson.M{ 
-        "$set": bson.M {
-            "isDeleted": true,
-            "deletionTime": time.Now(),
-        },
-    }
+	update := bson.M{
+		"$set": bson.M{
+			"isDeleted":    true,
+			"deletionTime": time.Now(),
+		},
+	}
 
-    result, err := mongodb.Token.UpdateOne(context.TODO(), filter, update)
+	result, err := mongodb.Token.UpdateOne(context.TODO(), filter, update)
 
-    if err != nil {
-        log.Printf("Error removing token: %s", err)
-        return err
-    }
+	if err != nil {
+		log.Printf("Error removing token: %s", err)
+		return err
+	}
 
-    if result.ModifiedCount == 0 {
-        return errors.New("No records found")
-    }
+	if result.ModifiedCount == 0 {
+		return errors.New("No records found")
+	}
 
-    return nil
+	return nil
 }
