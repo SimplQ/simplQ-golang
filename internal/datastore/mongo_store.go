@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"sync"
+	"time"
 
 	"github.com/SimplQ/simplQ-golang/internal/models/db"
 
@@ -221,13 +222,35 @@ func (mongodb MongoDB) ReadToken(id db.TokenId) (db.Token, error) {
 	err := mongodb.Token.FindOne(context.TODO(), bson.M{"_id": tokenId}).Decode(&result)
 
 	if err != nil {
-		log.Fatal(err)
+        log.Println("Error reading token: ", err)
 		return result, err
 	}
 
 	return result, nil
 }
 
-func (mongodb MongoDB) RemoveToken(db.TokenId) error {
-	panic("Not implemented")
+func (mongodb MongoDB) RemoveToken(id db.TokenId) error {
+	tokenId, _ := primitive.ObjectIDFromHex(string(id))
+
+    filter := bson.M{ "_id": tokenId }
+
+    update := bson.M{ 
+        "$set": bson.M {
+            "isDeleted": true,
+            "deletionTime": time.Now(),
+        },
+    }
+
+    result, err := mongodb.Token.UpdateOne(context.TODO(), filter, update)
+
+    if err != nil {
+        log.Printf("Error removing token: %s", err)
+        return err
+    }
+
+    if result.ModifiedCount == 0 {
+        return errors.New("No records found")
+    }
+
+    return nil
 }

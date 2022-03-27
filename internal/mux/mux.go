@@ -47,8 +47,9 @@ func InitalizeRoutes() chi.Router {
 		r.Post("/", handler.CreateToken)
 
 		r.Route("/{id}", func(r chi.Router) {
-			r.Use(handler.TokenCtx)
+			r.Use(handler.TokenMiddleware)
 			r.Get("/", handler.GetToken)
+            r.Delete("/", handler.DeleteToken)
 		})
 	})
 	return r
