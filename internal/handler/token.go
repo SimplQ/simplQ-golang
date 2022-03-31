@@ -112,7 +112,7 @@ func DeleteToken(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Deleted token %s", id)
 }
 
-func TokenMiddleware(next http.Handler) http.Handler {
+func TokenOwnerAuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), TOKEN_ID, chi.URLParam(r, "id"))
 		next.ServeHTTP(w, r.WithContext(ctx))

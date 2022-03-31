@@ -122,7 +122,7 @@ func DeleteQueue(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func QueueMiddlware(next http.Handler) http.Handler {
+func QueueOwnerAuthMiddlware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		queueId := chi.URLParam(r, "id")
 		uid := r.Context().Value(authentication.UID).(string)
