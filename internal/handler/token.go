@@ -8,13 +8,14 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/SimplQ/simplQ-golang/internal/authentication"
 	"github.com/SimplQ/simplQ-golang/internal/datastore"
 	"github.com/SimplQ/simplQ-golang/internal/models/api"
 	"github.com/SimplQ/simplQ-golang/internal/models/db"
 	"github.com/go-chi/chi/v5"
 )
 
-const tokenId key = 0
+const TOKEN_ID = "tokenId"
 
 func CreateToken(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
@@ -56,10 +57,10 @@ func CreateToken(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetToken(w http.ResponseWriter, r *http.Request) {
-	id := r.Context().Value(tokenId).(string)
+	id := r.Context().Value(TOKEN_ID).(string)
 
 	if id == "" {
-		http.Error(w, fmt.Sprintf("Invalid Id: %s", id), http.StatusBadRequest)
+		http.Error(w, "Invalid Id", http.StatusBadRequest)
 		return
 	}
 
@@ -73,9 +74,47 @@ func GetToken(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(token)
 }
 
-func TokenCtx(next http.Handler) http.Handler {
+func DeleteToken(w http.ResponseWriter, r *http.Request) {
+	log.Println("Delete token")
+	id := r.Context().Value(TOKEN_ID).(string)
+	uid := r.Context().Value(authentication.UID).(string)
+
+	if id == "" {
+		http.Error(w, "Invalid Id", http.StatusBadRequest)
+		return
+	}
+
+	token, err := datastore.Store.ReadToken(db.TokenId(id))
+
+	log.Println("Read token")
+
+	if err != nil {
+		http.Error(w, fmt.Sprint(err), http.StatusInternalServerError)
+		return
+	}
+
+	queueId := token.QueueId
+
+	queue, err := datastore.Store.ReadQueue(db.QueueId(queueId))
+
+	if queue.Owner != uid {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	err = datastore.Store.RemoveToken(db.TokenId(id))
+
+	if err != nil {
+		http.Error(w, fmt.Sprint(err), http.StatusInternalServerError)
+		return
+	}
+
+	fmt.Fprintf(w, "Deleted token %s", id)
+}
+
+func TokenOwnerAuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		ctx := context.WithValue(r.Context(), tokenId, chi.URLParam(r, "id"))
+		ctx := context.WithValue(r.Context(), TOKEN_ID, chi.URLParam(r, "id"))
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

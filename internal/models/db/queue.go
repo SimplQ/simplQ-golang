@@ -16,6 +16,9 @@ type Queue struct {
 	// there is only one queue by a given name.
 	QueueName string `bson:"queueName"`
 
+	// ID of the owner of this queue
+	Owner string `bson:"owner"`
+
 	// Set to true if the queue is temporarily not issuing tokens
 	IsPaused bool `bson:"isPaused"`
 
